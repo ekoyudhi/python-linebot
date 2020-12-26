@@ -92,9 +92,10 @@ def callback():
                         hasil = "Error / Tidak ditemukan"
                     bubble = BubbleContainer(
                         header=BoxComponent(
-                            type="text",
-                            text="Dicoding Academy",
-                            weight="bold"
+                            layout="vertical",
+                            contents=[
+                                TextComponent(text="Dicoding Academy", weight="bold")
+                            ]
                         ),
                         hero=ImageComponent(
                             url="https://www.dicoding.com/images/small/academy/menjadi_android_developer_expert_logo_041217105708.png",
@@ -125,7 +126,8 @@ def callback():
                             ]
                         ),
                         footer=BoxComponent(
-
+                            layout="vertical",
+                            contents=[]
                         )
                     )
                     message = FlexSendMessage(alt_text="Ini Flex Message", contents=bubble)
