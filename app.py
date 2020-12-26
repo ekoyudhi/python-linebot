@@ -34,8 +34,6 @@ from linebot.models import (
 )
 
 from kbbi import KBBI, AutentikasiKBBI
-import json
-import requests
 
 app = Flask(__name__)
 
@@ -93,106 +91,45 @@ def callback():
                     except:
                         hasil = "Error / Tidak ditemukan"
                     bubble = BubbleContainer(
-            direction='ltr',
-            hero=ImageComponent(
-                url='https://example.com/cafe.jpg',
-                size='full',
-                aspect_ratio='20:13',
-                aspect_mode='cover',
-                action=URIAction(uri='http://example.com', label='label')
-            ),
-            body=BoxComponent(
-                layout='vertical',
-                contents=[
-                    # title
-                    TextComponent(text='Brown Cafe', weight='bold', size='xl'),
-                    # review
-                    BoxComponent(
-                        layout='baseline',
-                        margin='md',
-                        contents=[
-                            IconComponent(size='sm', url='https://example.com/gold_star.png'),
-                            IconComponent(size='sm', url='https://example.com/grey_star.png'),
-                            IconComponent(size='sm', url='https://example.com/gold_star.png'),
-                            IconComponent(size='sm', url='https://example.com/gold_star.png'),
-                            IconComponent(size='sm', url='https://example.com/grey_star.png'),
-                            TextComponent(text='4.0', size='sm', color='#999999', margin='md',
-                                          flex=0)
-                        ]
-                    ),
-                    # info
-                    BoxComponent(
-                        layout='vertical',
-                        margin='lg',
-                        spacing='sm',
-                        contents=[
-                            BoxComponent(
-                                layout='baseline',
-                                spacing='sm',
-                                contents=[
-                                    TextComponent(
-                                        text='Place',
-                                        color='#aaaaaa',
-                                        size='sm',
-                                        flex=1
-                                    ),
-                                    TextComponent(
-                                        text='Shinjuku, Tokyo',
-                                        wrap=True,
-                                        color='#666666',
-                                        size='sm',
-                                        flex=5
-                                    )
-                                ],
-                            ),
-                            BoxComponent(
-                                layout='baseline',
-                                spacing='sm',
-                                contents=[
-                                    TextComponent(
-                                        text='Time',
-                                        color='#aaaaaa',
-                                        size='sm',
-                                        flex=1
-                                    ),
-                                    TextComponent(
-                                        text="10:00 - 23:00",
-                                        wrap=True,
-                                        color='#666666',
-                                        size='sm',
-                                        flex=5,
-                                    ),
-                                ],
-                            ),
-                        ],
+                        header=BoxComponent(
+                            type="text",
+                            text="Dicoding Academy",
+                            weight="bold"
+                        ),
+                        hero=ImageComponent(
+                            url="https://www.dicoding.com/images/small/academy/menjadi_android_developer_expert_logo_041217105708.png",
+                            size="full",
+                            aspectRatio="4:3",
+                            aspectMode="cover"
+                        ),
+                        body=BoxComponent(
+                            layout="vertical",
+                            contents=[
+                                TextComponent(
+                                    text="Menjadi Android Developer Expert",
+                                    size="sm",
+                                    color="#c9302c",
+                                    weight="bold"
+                                ),
+                                TextComponent(
+                                    text="oleh: Dicoding Indonesia",
+                                    size="sm",
+                                    color="#c9302c"
+                                ),
+                                TextComponent(
+                                    text="Jadilah expert di dunia pemrograman Android. Materi disusun oleh Dicoding sebagai Google Authorized Training Partner.",
+                                    size="sm",
+                                    wrap=True,
+                                    margin="lg"
+                                )
+                            ]
+                        ),
+                        footer=BoxComponent(
+
+                        )
                     )
-                ],
-            ),
-            footer=BoxComponent(
-                layout='vertical',
-                spacing='sm',
-                contents=[
-                    # callAction
-                    ButtonComponent(
-                        style='link',
-                        height='sm',
-                        action=URIAction(label='CALL', uri='tel:000000'),
-                    ),
-                    # separator
-                    SeparatorComponent(),
-                    # websiteAction
-                    ButtonComponent(
-                        style='link',
-                        height='sm',
-                        action=URIAction(label='WEBSITE', uri="https://example.com")
-                    )
-                ]
-            )
-			)
-            message = FlexSendMessage(alt_text="hello", contents=bubble)
-            line_bot_api.reply_message(event.reply_token, message)
-            #line_bot_api.reply_message(event.reply_token, TextSendMessage(text=str(data)))
-                    
+                    message = FlexSendMessage(alt_text="Ini Flex Message", contents=bubble)
+                    line_bot_api.reply_message(event.reply_token, message)
             else:
                 txt_kbbi_salah = "Perintah yang benar adalah /kbbi kata_yang_dicari"
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_kbbi_salah))
