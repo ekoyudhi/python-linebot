@@ -88,9 +88,10 @@ def callback():
                         hasil = str(kata)
                     except:
                         hasil = "Error / Tidak ditemukan"
-                    f = open('flex.json')
-                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=str(f)))
-                    f.close()
+                    with open('flex.json') as json_file:
+                        data = json.load(json_file)
+                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=str(data)))
+                    
             else:
                 txt_kbbi_salah = "Perintah yang benar adalah /kbbi kata_yang_dicari"
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_kbbi_salah))
