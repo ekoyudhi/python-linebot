@@ -74,7 +74,7 @@ def callback():
             #continue
             #line_bot_api.reply_message(event.reply_token, TextSendMessage(text="not instance event"))
             if isinstance(event, PostbackEvent):
-                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="ini postback event"))
+                #line_bot_api.reply_message(event.reply_token, TextSendMessage(text="ini postback event"))
                 postback_data = str(event.postback.data)
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text=postback_data))
                 # lst_postback_data = postback_data.split()
@@ -100,7 +100,7 @@ def callback():
                     layout="vertical",
                     contents=[
                         TextComponent(text="Pembuatan ID Billing Pajak", size="md", color="#c9302c"),
-                        TextComponent(text="Ini adalah Line Bot yang dapat digunakan untuk pembuatan ID Billing Pajak. ID Biling Pajak untuk Pajak Penghasilan (PPh), Pajak Pertambahan Nilai (PPN) dan Pajak Bumi dan Bangunan (PBB)")
+                        TextComponent(text="Ini adalah Line Bot yang dapat digunakan untuk pembuatan ID Billing Pajak. ID Biling Pajak untuk Pajak Penghasilan (PPh), Pajak Pertambahan Nilai (PPN) dan Pajak Bumi dan Bangunan (PBB)",size="sm",wrap=True)
                     ]
                 ),
                 footer=BoxComponent(
