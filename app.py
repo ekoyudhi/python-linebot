@@ -66,7 +66,7 @@ def saveUserLog(user_id, event):
     cur = conn.cursor()
     sql = "INSERT INTO userLog(user_id,events) VALUES ('{0}','{1}')".format(user_id,event)
     cur.execute(sql)
-    cur.commit()
+    conn.commit()
     conn.close() 
 
 @app.route("/callback", methods=['POST'])
