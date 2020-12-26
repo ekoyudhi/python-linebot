@@ -64,7 +64,7 @@ db_port = os.getenv('DB_PORT')
 def saveUserLog(user_id, event):
     conn = psycopg2.connect(database = db_database, user = db_username, password = db_password, host = db_host, port = db_port)
     cur = conn.cursor()
-    sql = "INSERT INTO userLog(user_id,event) VALUES ({0},{1})".format(user_id,event)
+    sql = "INSERT INTO userLog(user_id,events) VALUES ({0},{1})".format(user_id,event)
     cur.execute(sql)
     cur.commit()
     conn.close() 
@@ -92,7 +92,8 @@ def callback():
                 lst_postback_data = postback_data.split()
                 if len(lst_postback_data) == 1:
                     dat = lst_postback_data[0].split("=")[1]
-                    if 'cari' in dat:
+                    if 'start' in dat:
+                        saveUserLog(event.source.user_id, 'start')
                         txt_cari = "Silahkan ketikkan kata / frasa yang ingin anda cari"
                         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_cari))
                 elif len(lst_postback_data) == 2:
