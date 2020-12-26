@@ -127,7 +127,12 @@ def callback():
                         ),
                         footer=BoxComponent(
                             layout="vertical",
-                            contents=[]
+                            contents=[
+                                ButtonComponent(
+                                    style="primary",
+                                    action=URIAction(label='WEBSITE', uri="https://ekoyudhi.id")
+                                )
+                            ]
                         )
                     )
                     message = FlexSendMessage(alt_text="Ini Flex Message", contents=bubble)
