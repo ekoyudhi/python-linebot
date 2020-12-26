@@ -30,7 +30,7 @@ from linebot.models import (
     FlexSendMessage, BubbleContainer, ImageComponent, BoxComponent,
     TextComponent, IconComponent, ButtonComponent,
     SeparatorComponent, QuickReply, QuickReplyButton,
-    ImageSendMessage, URIAction, PostbackAction
+    ImageSendMessage, URIAction, PostbackAction, MessageAction
 )
 
 from kbbi import KBBI, AutentikasiKBBI
@@ -130,7 +130,11 @@ def callback():
                             contents=[
                                 ButtonComponent(
                                     style="primary",
-                                    action=PostbackAction(label="Ini Text", data="ini",displayText="Action")
+                                    action=PostbackAction(label="Ini Postback", data="postback_data",displayText="postback")
+                                ),
+                                ButtonComponent(
+                                    style="primary",
+                                    action=MessageAction(label="Ini Message", data="message_data")
                                 )
                             ]
                         )
