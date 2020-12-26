@@ -192,8 +192,6 @@ def callback():
                 line_bot_api.reply_message(event.reply_token, message)
             elif isinstance(event, UnfollowEvent):
                 removeAllUserLog(event.source.user_id)
-            else:
-                continue
         elif not isinstance(event.message, TextMessage):
             keterangan = "Perintah tidak dikenali. Untuk memulai silahkan ketik \"Mulai\""
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=keterangan))
