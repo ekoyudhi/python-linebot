@@ -71,8 +71,12 @@ def callback():
         if not isinstance(event.message, TextMessage):
             continue
 
-        txt = event.message.text
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt))
+        txt = str(event.message.text)
+        if '/start' in txt:
+            txt_start = 'Ini adalah start'
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_start))
+        else:
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt))
         # line_bot_api.reply_message(
         #     event.reply_token,
         #     TextSendMessage(text=event.message.text)
