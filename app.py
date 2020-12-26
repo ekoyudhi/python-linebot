@@ -30,7 +30,8 @@ from linebot.models import (
     FlexSendMessage, BubbleContainer, ImageComponent, BoxComponent,
     TextComponent, IconComponent, ButtonComponent,
     SeparatorComponent, QuickReply, QuickReplyButton,
-    ImageSendMessage, URIAction, PostbackAction, MessageAction, PostbackEvent
+    ImageSendMessage, URIAction, PostbackAction, MessageAction, PostbackEvent,
+    UnfollowEvent, FollowEvent,
 )
 
 from kbbi import KBBI, AutentikasiKBBI
@@ -79,8 +80,42 @@ def getLastEventUserLog(user_id):
     if len(rows) > 0:
         return rows[0][0]
     else:
-        return 'null'    
+        return 'null'
 
+def removeAllUserLog(user_id):
+    conn = psycopg2.connect(database = db_database, user = db_username, password = db_password, host = db_host, port = db_port)
+    cur = conn.cursor()
+    sql = "DELETE FROM userLog WHERE user_id='{0}'".format(user_id)
+    cur.execute(sql)
+    conn.commit()
+    conn.close()      
+
+mulai_bubble = BubbleContainer(
+    header=BoxComponent(
+            layout="vertical",
+            contents=[
+                TextComponent(text="Line Bot KBBI",size="xl",weight="bold")
+            ]
+        ),
+        body=BoxComponent(
+            layout="vertical",
+            contents=[
+                TextComponent(text="Kamus Besar Bahasa Indonesia (KBBI) versi Line Bot", size="md", color="#c9302c"),
+                TextComponent(text="Ini adalah Line Bot untuk melakukan pencarian kata pada KBBI yang juga dapat diakses melalui laman https://kbbi.kemendikbud.go.id",size="sm",wrap=True)
+            ]
+        ),
+        footer=BoxComponent(
+            layout="vertical",
+            spacing="sm",
+            contents=[
+                ButtonComponent(
+                    style="primary",
+                    height="md",
+                    action=PostbackAction(label="Cari Kata", data="action=start", displayText="start")
+                )
+            ]
+        )
+    )
 @app.route("/callback", methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
@@ -110,6 +145,12 @@ def callback():
                         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_cari))
                 elif len(lst_postback_data) == 2:
                     continue
+            elif isinstance(event, FollowEvent):
+                saveUserLog(event.source.user_id, 'mulai')
+                message = FlexSendMessage(alt_text="Flex Mulai", contents=mulai_bubble)
+                line_bot_api.reply_message(event.reply_token, message)
+            elif isinstance(event, UnfollowEvent):
+                removeAllUserLog(event.source.user_id)
         if not isinstance(event.message, TextMessage):
             continue
 
@@ -121,32 +162,6 @@ def callback():
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text='memulai pencarian A'))
             else:
                 saveUserLog(event.source.user_id, 'mulai')
-                mulai_bubble = BubbleContainer(
-                header=BoxComponent(
-                        layout="vertical",
-                        contents=[
-                            TextComponent(text="Line Bot KBBI",size="xl",weight="bold")
-                        ]
-                    ),
-                    body=BoxComponent(
-                        layout="vertical",
-                        contents=[
-                            TextComponent(text="Kamus Besar Bahasa Indonesia (KBBI) versi Line Bot", size="md", color="#c9302c"),
-                            TextComponent(text="Ini adalah Line Bot untuk melakukan pencarian kata pada KBBI yang juga dapat diakses melalui laman https://kbbi.kemendikbud.go.id",size="sm",wrap=True)
-                        ]
-                    ),
-                    footer=BoxComponent(
-                        layout="vertical",
-                        spacing="sm",
-                        contents=[
-                            ButtonComponent(
-                                style="primary",
-                                height="md",
-                                action=PostbackAction(label="Cari Kata", data="action=start", displayText="start")
-                            )
-                        ]
-                    )
-                )
                 message = FlexSendMessage(alt_text="Flex Mulai", contents=mulai_bubble)
                 line_bot_api.reply_message(event.reply_token, message)
         else:
