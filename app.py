@@ -129,13 +129,8 @@ def callback():
                             layout="vertical",
                             contents=[
                                 ButtonComponent(
-                                    actions=[
-                                        PostbackAction(
-                                            label="cari_kata_lain",
-                                            display_text="Cari Kata Lain",
-                                            data="cari_kata_lain"
-                                        )
-                                    ]
+                                    style="primary"
+                                    actions=PostbackAction(label="cari_kata_lain",displayText="Cari Kata Lain",data="cari_kata_lain")
                                 )
                             ]
                         )
