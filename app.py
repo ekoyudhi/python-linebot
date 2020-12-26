@@ -94,7 +94,7 @@ def callback():
                         header=BoxComponent(
                             layout="vertical",
                             contents=[
-                                TextComponent(text="Dicoding Academy", weight="bold")
+                                TextComponent(text="Line Bot KBBI", size="xl", weight="bold")
                             ]
                         ),
                         hero=ImageComponent(
@@ -107,18 +107,18 @@ def callback():
                             layout="vertical",
                             contents=[
                                 TextComponent(
-                                    text="Menjadi Android Developer Expert",
+                                    text="Kata yang dicari :",
+                                    size="sm",
+                                    color="#c9302c"
+                                ),
+                                TextComponent(
+                                    text=lst_txt[1],
                                     size="sm",
                                     color="#c9302c",
                                     weight="bold"
                                 ),
                                 TextComponent(
-                                    text="oleh: Dicoding Indonesia",
-                                    size="sm",
-                                    color="#c9302c"
-                                ),
-                                TextComponent(
-                                    text="Jadilah expert di dunia pemrograman Android. Materi disusun oleh Dicoding sebagai Google Authorized Training Partner.",
+                                    text=hasil,
                                     size="sm",
                                     wrap=True,
                                     margin="lg"
