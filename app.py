@@ -30,6 +30,8 @@ from linebot.models import (
 )
 
 from kbbi import KBBI, AutentikasiKBBI
+import json
+import requests
 
 app = Flask(__name__)
 
@@ -86,7 +88,9 @@ def callback():
                         hasil = str(kata)
                     except:
                         hasil = "Error / Tidak ditemukan"
-                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=hasil))
+                    f = open('flex.json')
+                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=str(f)))
+                    f.close()
             else:
                 txt_kbbi_salah = "Perintah yang benar adalah /kbbi kata_yang_dicari"
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_kbbi_salah))
