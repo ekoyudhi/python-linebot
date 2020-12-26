@@ -81,6 +81,7 @@ def callback():
                     dat = lst_postback_data[0].split("=")[1]
                     line_bot_api.reply_message(event.reply_token, TextSendMessage(text=dat))
                 elif len(lst_postback_data) == 2:
+                    continue
         if not isinstance(event.message, TextMessage):
             #continue
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text="not instance message"))
