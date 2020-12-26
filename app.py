@@ -30,7 +30,7 @@ from linebot.models import (
     FlexSendMessage, BubbleContainer, ImageComponent, BoxComponent,
     TextComponent, IconComponent, ButtonComponent,
     SeparatorComponent, QuickReply, QuickReplyButton,
-    ImageSendMessage
+    ImageSendMessage, URIAction, PostbackAction
 )
 
 from kbbi import KBBI, AutentikasiKBBI
@@ -98,7 +98,7 @@ def callback():
                             ]
                         ),
                         hero=ImageComponent(
-                            url="https://www.dicoding.com/images/small/academy/menjadi_android_developer_expert_logo_041217105708.png",
+                            url="https://kantorbahasagorontalo.kemdikbud.go.id/wp-content/uploads/2020/02/KBBI.png",
                             size="full",
                             aspectRatio="4:3",
                             aspectMode="cover"
@@ -127,7 +127,17 @@ def callback():
                         ),
                         footer=BoxComponent(
                             layout="vertical",
-                            contents=[]
+                            contents=[
+                                ButtonComponent(
+                                    actions=[
+                                        PostbackAction(
+                                            label="cari_kata_lain",
+                                            display_text="Cari Kata Lain",
+                                            data="cari_kata_lain"
+                                        )
+                                    ]
+                                )
+                            ]
                         )
                     )
                     message = FlexSendMessage(alt_text="Ini Flex Message", contents=bubble)
