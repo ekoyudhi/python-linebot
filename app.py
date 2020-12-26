@@ -110,8 +110,8 @@ def BubbleHasil(kata_frasa, hasilKBBI):
         body=BoxComponent(
             layout="vertical",
             contents=[
-                TextComponent(text="Kata yang dicari :", size="md", color="#c9302c"),
-                TextComponent(text=kata_frasa, size="sm",color="#c9302c"),
+                TextComponent(text="Kata yang dicari :", size="md", color="#c9302c",wrap=True),
+                TextComponent(text=kata_frasa, size="sm",color="#c9302c",wrap=True),
                 TextComponent(text=hasilKBBI,size="sm",wrap=True)
             ]
         ),
@@ -140,7 +140,7 @@ mulai_bubble = BubbleContainer(
         body=BoxComponent(
             layout="vertical",
             contents=[
-                TextComponent(text="Kamus Besar Bahasa Indonesia (KBBI) versi Line Bot", size="md", color="#c9302c"),
+                TextComponent(text="Kamus Besar Bahasa Indonesia (KBBI) versi Line Bot", size="md", color="#c9302c",wrap=True),
                 TextComponent(text="Ini adalah Line Bot untuk melakukan pencarian kata pada KBBI yang juga dapat diakses melalui laman https://kbbi.kemendikbud.go.id",size="sm",wrap=True)
             ]
         ),
@@ -192,32 +192,34 @@ def callback():
                 line_bot_api.reply_message(event.reply_token, message)
             elif isinstance(event, UnfollowEvent):
                 removeAllUserLog(event.source.user_id)
-        # if not isinstance(event.message, TextMessage):
-        #     continue
-
-        text = str(event.message.text)
-
-        if 'mulai' in text.lower():
-            last_event = getLastEventUserLog(event.source.user_id)
-            if 'start' in last_event:
-                hsl_kbbi = cariKata(text.lower(), authKBBI)
-                hsl_bubble = BubbleHasil(text.lower(), hsl_kbbi)
-                message = FlexSendMessage(alt_text="Flex Mulai", contents=hsl_bubble)
-                line_bot_api.reply_message(event.reply_token, message)
-            else:
-                saveUserLog(event.source.user_id, 'mulai')
-                message = FlexSendMessage(alt_text="Flex Mulai", contents=mulai_bubble)
-                line_bot_api.reply_message(event.reply_token, message)
+        if not isinstance(event.message, TextMessage):
+            keterangan = "Perintah tidak dikenali. Untuk memulai silahkan ketik \"Mulai\""
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=keterangan))
         else:
-            last_event = getLastEventUserLog(event.source.user_id)
-            if 'start' in last_event:
-                hsl_kbbi = cariKata(text.lower(), authKBBI)
-                hsl_bubble = BubbleHasil(text.lower(), hsl_kbbi)
-                message = FlexSendMessage(alt_text="Flex Mulai", contents=hsl_bubble)
-                line_bot_api.reply_message(event.reply_token, message)
+            text = str(event.message.text)
+            if 'mulai' in text.lower():
+                last_event = getLastEventUserLog(event.source.user_id)
+                if 'start' in last_event:
+                    hsl_kbbi = cariKata(text.lower(), authKBBI)
+                    hsl_bubble = BubbleHasil(text.lower(), hsl_kbbi)
+                    message = FlexSendMessage(alt_text="Flex Mulai", contents=hsl_bubble)
+                    line_bot_api.reply_message(event.reply_token, message)
+                    saveUserLog(event.source.user_id, 'hasil')
+                else:
+                    saveUserLog(event.source.user_id, 'mulai')
+                    message = FlexSendMessage(alt_text="Flex Mulai", contents=mulai_bubble)
+                    line_bot_api.reply_message(event.reply_token, message)
             else:
-                keterangan = "Perintah tidak dikenali. Untuk memulai silahkan ketik \"Mulai\""
-                line_bot_api.reply_message(event.reply_token, TextSendMessage(text=keterangan))
+                last_event = getLastEventUserLog(event.source.user_id)
+                if 'start' in last_event:
+                    hsl_kbbi = cariKata(text.lower(), authKBBI)
+                    hsl_bubble = BubbleHasil(text.lower(), hsl_kbbi)
+                    message = FlexSendMessage(alt_text="Flex Mulai", contents=hsl_bubble)
+                    line_bot_api.reply_message(event.reply_token, message)
+                    saveUserLog(event.source.user_id, 'hasil')
+                else:
+                    keterangan = "Perintah tidak dikenali. Untuk memulai silahkan ketik \"Mulai\""
+                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=keterangan))
 
     return 'OK'
 
