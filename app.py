@@ -73,7 +73,9 @@ def callback():
         if not isinstance(event, MessageEvent):
             continue
         if not isinstance(event.message, TextMessage):
-            continue
+            #continue
+            if 'postback' in str(event.type):
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="postback"))
 
         text = str(event.message.text)
         if 'mulai' in text.lower():
@@ -93,20 +95,21 @@ def callback():
                 ),
                 footer=BoxComponent(
                     layout="vertical",
+                    spacing="sm",
                     contents=[
                         ButtonComponent(
                             style="primary",
-                            height="sm",
+                            height="md",
                             action=PostbackAction(label="Pajak Penghasilan", data="pajak=pph", displayText="pph")
                         ),
                         ButtonComponent(
                             style="primary",
-                            height="sm",
+                            height="md",
                             action=PostbackAction(label="Pajak Pertambahan Nilai", data="pajak=ppn", displayText="ppn")
                         ),
                         ButtonComponent(
                             style="primary",
-                            height="sm",
+                            height="md",
                             action=PostbackAction(label="Pajak Bumi dan Bangunan", data="pajak=pbb", displayText="pbb")
                         )
                     ]
