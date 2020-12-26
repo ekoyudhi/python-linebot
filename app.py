@@ -33,7 +33,8 @@ from linebot.models import (
     ImageSendMessage, URIAction, PostbackAction, MessageAction, PostbackEvent
 )
 
-# from kbbi import KBBI, AutentikasiKBBI
+from kbbi import KBBI, AutentikasiKBBI
+import psycopg2
 
 app = Flask(__name__)
 
@@ -50,9 +51,23 @@ if channel_access_token is None:
 line_bot_api = LineBotApi(channel_access_token)
 parser = WebhookParser(channel_secret)
 
-# userKBBI = os.getenv('USERNAME_KBBI', None)
-# passKBBI = os.getenv('PASSWORD_KBBI', None)
-# authKBBI = AutentikasiKBBI(userKBBI, passKBBI)
+userKBBI = os.getenv('USERNAME_KBBI', None)
+passKBBI = os.getenv('PASSWORD_KBBI', None)
+authKBBI = AutentikasiKBBI(userKBBI, passKBBI)
+
+db_database = os.getenv('DB_DATABASE', None)
+db_username = os.getenv('DB_USERNAME', None)
+db_password = os.getenv('DB_PASSWORD', None)
+db_host = os.getenv('DB_HOST')
+db_port = os.getenv('DB_PORT')
+
+def saveUserLog(user_id, event):
+    conn = psycopg2.connect(database = db_database, user = db_username, password = db_password, host = db_host, port = db_port)
+    cur = conn.cursor()
+    sql = "INSERT INTO userLog(user_id,event) VALUES ({0},{1})".format(user_id,event)
+    cur.execute(sql)
+    cur.commit()
+    conn.close() 
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -72,15 +87,14 @@ def callback():
     for event in events:
         if not isinstance(event, MessageEvent):
             #continue
-            #line_bot_api.reply_message(event.reply_token, TextSendMessage(text="not instance event"))
             if isinstance(event, PostbackEvent):
-                #line_bot_api.reply_message(event.reply_token, TextSendMessage(text="ini postback event"))
                 postback_data = str(event.postback.data)
-                #line_bot_api.reply_message(event.reply_token, TextSendMessage(text=postback_data))
                 lst_postback_data = postback_data.split()
                 if len(lst_postback_data) == 1:
                     dat = lst_postback_data[0].split("=")[1]
-                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=dat))
+                    if 'cari' in dat:
+                        txt_cari = "Silahkan ketikkan kata / frasa yang ingin anda cari"
+                        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_cari))
                 elif len(lst_postback_data) == 2:
                     continue
         if not isinstance(event.message, TextMessage):
@@ -89,18 +103,19 @@ def callback():
 
         text = str(event.message.text)
         if 'mulai' in text.lower():
+            saveUserLog(event.source.user_id, 'mulai')
             mulai_bubble = BubbleContainer(
                 header=BoxComponent(
                     layout="vertical",
                     contents=[
-                        TextComponent(text="Line Bot ID Billing Pajak",size="xl",weight="bold")
+                        TextComponent(text="Line Bot KBBI",size="xl",weight="bold")
                     ]
                 ),
                 body=BoxComponent(
                     layout="vertical",
                     contents=[
-                        TextComponent(text="Pembuatan ID Billing Pajak", size="md", color="#c9302c"),
-                        TextComponent(text="Ini adalah Line Bot yang dapat digunakan untuk pembuatan ID Billing Pajak. ID Biling Pajak untuk Pajak Penghasilan (PPh), Pajak Pertambahan Nilai (PPN) dan Pajak Bumi dan Bangunan (PBB)",size="sm",wrap=True)
+                        TextComponent(text="Kamus Besar Bahasa Indonesia (KBBI) versi Line Bot", size="md", color="#c9302c"),
+                        TextComponent(text="Ini adalah Line Bot untuk melakukan pencarian kata pada KBBI yang juga dapat diakses melalui laman https://kbbi.kemendikbud.go.id",size="sm",wrap=True)
                     ]
                 ),
                 footer=BoxComponent(
@@ -110,17 +125,7 @@ def callback():
                         ButtonComponent(
                             style="primary",
                             height="md",
-                            action=PostbackAction(label="Pajak Penghasilan", data="pajak=pph", displayText="pph")
-                        ),
-                        ButtonComponent(
-                            style="primary",
-                            height="md",
-                            action=PostbackAction(label="Pajak Pertambahan Nilai", data="pajak=ppn", displayText="ppn")
-                        ),
-                        ButtonComponent(
-                            style="primary",
-                            height="md",
-                            action=PostbackAction(label="Pajak Bumi dan Bangunan", data="pajak=pbb", displayText="pbb")
+                            action=PostbackAction(label="Cari Kata", data="action=start", displayText="start")
                         )
                     ]
                 )
