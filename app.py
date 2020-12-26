@@ -111,7 +111,7 @@ def BubbleHasil(kata_frasa, hasilKBBI):
             layout="vertical",
             contents=[
                 TextComponent(text="Kata yang dicari :", size="md", color="#c9302c"),
-                TextComponent(text=kata_frasa, size="sm",color="#c9302c")
+                TextComponent(text=kata_frasa, size="sm",color="#c9302c"),
                 TextComponent(text=hasilKBBI,size="sm",wrap=True)
             ]
         ),
