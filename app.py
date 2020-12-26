@@ -33,7 +33,7 @@ from linebot.models import (
     ImageSendMessage, URIAction, PostbackAction, MessageAction
 )
 
-from kbbi import KBBI, AutentikasiKBBI
+# from kbbi import KBBI, AutentikasiKBBI
 
 app = Flask(__name__)
 
@@ -50,9 +50,9 @@ if channel_access_token is None:
 line_bot_api = LineBotApi(channel_access_token)
 parser = WebhookParser(channel_secret)
 
-userKBBI = os.getenv('USERNAME_KBBI', None)
-passKBBI = os.getenv('PASSWORD_KBBI', None)
-authKBBI = AutentikasiKBBI(userKBBI, passKBBI)
+# userKBBI = os.getenv('USERNAME_KBBI', None)
+# passKBBI = os.getenv('PASSWORD_KBBI', None)
+# authKBBI = AutentikasiKBBI(userKBBI, passKBBI)
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -75,78 +75,45 @@ def callback():
         if not isinstance(event.message, TextMessage):
             continue
 
-        txt = str(event.message.text)
-        if '/help' in txt:
-            txt_start = 'Ini Line Bot untuk pencarian kata pada Kamus Besar Bahasa Indonesia.\nUntuk memmulai pencarian ketik perintah /kbbi kata_yang_dicari'
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_start))
-        elif '/kbbi' in txt:
-            lst_txt = txt.split()
-            if len(lst_txt) == 2:
-                if '/kbbi' in lst_txt[0]:
-                    #txt_kbbi_cari = "Pencarian kata "+lst_txt[1]+" ditemukan"
-                    hasil = ""
-                    try:
-                        kata = KBBI(lst_txt[1], authKBBI)
-                        hasil = str(kata)
-                    except:
-                        hasil = "Error / Tidak ditemukan"
-                    bubble = BubbleContainer(
-                        header=BoxComponent(
-                            layout="vertical",
-                            contents=[
-                                TextComponent(text="Line Bot KBBI", size="xl", weight="bold")
-                            ]
+        text = str(event.message.text)
+        if 'mulai' in text.lower():
+            mulai_bubble = BubbleContainer(
+                header=BoxComponent(
+                    layout="vertical",
+                    contents=[
+                        TextComponent(text="Line Bot ID Billing Pajak",size="xl",weight="bold")
+                    ]
+                ),
+                body=BoxComponent(
+                    layout="vertical",
+                    contents=[
+                        TextComponent(text="Pembuatan ID Billing Pajak", size="md", color="#c9302c"),
+                        TextComponent(text="Ini adalah Line Bot yang dapat digunakan untuk pembuatan ID Billing Pajak. ID Biling Pajak untuk Pajak Penghasilan (PPh), Pajak Pertambahan Nilai (PPN) dan Pajak Bumi dan Bangunan (PBB)")
+                    ]
+                ),
+                footer=BoxComponent(
+                    layout="vertical",
+                    contents=[
+                        ButtonComponent(
+                            style="primary",
+                            action=PostbackAction(label="Pajak Penghasilan", data="pajak=pph", displayText="pph")
                         ),
-                        hero=ImageComponent(
-                            url="https://kantorbahasagorontalo.kemdikbud.go.id/wp-content/uploads/2020/02/KBBI.png",
-                            size="full",
-                            aspectRatio="4:3",
-                            aspectMode="cover"
+                        ButtonComponent(
+                            style="primary",
+                            action=PostbackAction(label="Pajak Pertambahan Nilai", data="pajak=ppn", displayText="ppn")
                         ),
-                        body=BoxComponent(
-                            layout="vertical",
-                            contents=[
-                                TextComponent(
-                                    text="Kata yang dicari :",
-                                    size="sm",
-                                    color="#c9302c"
-                                ),
-                                TextComponent(
-                                    text=lst_txt[1],
-                                    size="sm",
-                                    color="#c9302c",
-                                    weight="bold"
-                                ),
-                                TextComponent(
-                                    text=hasil,
-                                    size="sm",
-                                    wrap=True,
-                                    margin="lg"
-                                )
-                            ]
-                        ),
-                        footer=BoxComponent(
-                            layout="vertical",
-                            contents=[
-                                ButtonComponent(
-                                    style="primary",
-                                    action=PostbackAction(label="Ini Postback", data="postback_data",displayText="postback")
-                                ),
-                                ButtonComponent(
-                                    style="primary",
-                                    action=MessageAction(label="Ini Message", data="message_data")
-                                )
-                            ]
+                        ButtonComponent(
+                            style="primary",
+                            action=PostbackAction(label="Pajak Bumi dan Bangunan", data="pajak=pbb", displayText="pbb")
                         )
-                    )
-                    message = FlexSendMessage(alt_text="Ini Flex Message", contents=bubble)
-                    line_bot_api.reply_message(event.reply_token, message)
-            else:
-                txt_kbbi_salah = "Perintah yang benar adalah /kbbi kata_yang_dicari"
-                line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_kbbi_salah))
+                    ]
+                )
+            )
+            message = FlexSendMessage(alt_text="Flex Mulai", contents=mulai_bubble)
+            line_bot_api.reply_message(event.reply_token, message)
         else:
-            txt_not = 'Perintah tidak dimengerti.\nSilahkan ketik perintah /help'
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_not))
+            keterangan = "Perintah tidak dikenali. Untuk memulai silahkan ketik \"Mulai\""
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=keterangan))
 
     return 'OK'
 
