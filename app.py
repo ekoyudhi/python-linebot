@@ -130,7 +130,7 @@ def callback():
                             contents=[
                                 ButtonComponent(
                                     style="primary",
-                                    action=URIAction(label='WEBSITE', uri="https://ekoyudhi.id")
+                                    action=PostbackAction(label="Ini Text", data="ini",displayText="Action")
                                 )
                             ]
                         )
