@@ -31,7 +31,7 @@ from linebot.models import (
     TextComponent, IconComponent, ButtonComponent,
     SeparatorComponent, QuickReply, QuickReplyButton,
     ImageSendMessage, URIAction, PostbackAction, MessageAction, PostbackEvent,
-    UnfollowEvent, FollowEvent,
+    UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent
 )
 
 from kbbi import KBBI, AutentikasiKBBI
@@ -192,6 +192,10 @@ def callback():
                 line_bot_api.reply_message(event.reply_token, message)
             elif isinstance(event, UnfollowEvent):
                 removeAllUserLog(event.source.user_id)
+            elif isinstance(event, JoinEvent):
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Join Group"))
+            elif isinstance(event, LeaveEvent):
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Leave Group"))
         elif not isinstance(event.message, TextMessage):
             keterangan = "Perintah tidak dikenali. Untuk memulai silahkan ketik \"Mulai\""
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=keterangan))
