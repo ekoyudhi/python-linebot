@@ -30,7 +30,7 @@ from linebot.models import (
     FlexSendMessage, BubbleContainer, ImageComponent, BoxComponent,
     TextComponent, IconComponent, ButtonComponent,
     SeparatorComponent, QuickReply, QuickReplyButton,
-    ImageSendMessage, URIAction, PostbackAction, MessageAction
+    ImageSendMessage, URIAction, PostbackAction, MessageAction, PostbackEvent
 )
 
 # from kbbi import KBBI, AutentikasiKBBI
@@ -72,7 +72,9 @@ def callback():
     for event in events:
         if not isinstance(event, MessageEvent):
             #continue
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text="not instance event"))
+            #line_bot_api.reply_message(event.reply_token, TextSendMessage(text="not instance event"))
+            if isinstance(event, PostbackEvent):
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="ini postback event"))
         if not isinstance(event.message, TextMessage):
             #continue
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text="not instance message"))
