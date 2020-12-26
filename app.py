@@ -195,14 +195,15 @@ def callback():
                 elif len(lst_postback_data) == 2:
                     continue
             elif isinstance(event, FollowEvent):
-                saveUserLog(event.source.user_id, 'mulai')
-                message = FlexSendMessage(alt_text="Flex Mulai", contents=mulai_bubble)
-                line_bot_api.reply_message(event.reply_token, message)
+                # saveUserLog(event.source.user_id, 'mulai')
+                # message = FlexSendMessage(alt_text="Flex Mulai", contents=mulai_bubble)
+                # line_bot_api.reply_message(event.reply_token, message)
+                txt_join = "Halo, aku adalah Line Bot Kamus Besar Bahasa Indonesia (KBBI).\n\nUntuk memulai silahkan ketik \"Mulai\""
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_join))
             elif isinstance(event, UnfollowEvent):
                 removeAllUserLog(event.source.user_id)
             elif isinstance(event, JoinEvent):
-                nm = getNameFromProfil(event.source.user_id)
-                txt_join = "Halo, aku "+nm
+                txt_join = "Halo, aku adalah Line Bot Kamus Besar Bahasa Indonesia (KBBI).\n\nUntuk memulai silahkan ketik \"Mulai\""
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_join))
             elif isinstance(event, LeaveEvent):
                 continue
