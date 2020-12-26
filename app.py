@@ -79,8 +79,14 @@ def callback():
             lst_txt = txt.split()
             if len(lst_txt) == 2:
                 if '/kbbi' in lst_txt[0]:
-                    txt_kbbi_cari = "Pencarian kata "+lst_txt[1]+" ditemukan"
-                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_kbbi_cari))
+                    #txt_kbbi_cari = "Pencarian kata "+lst_txt[1]+" ditemukan"
+                    hasil = ""
+                    try:
+                        kata = KBBI(lst_txt[1], authKBBI)
+                        hasil = str(kata)
+                    except:
+                        hasil = "Error / Tidak ditemukan"
+                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=hasil))
             else:
                 txt_kbbi_salah = "Perintah yang benar adalah /kbbi kata_yang_dicari"
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_kbbi_salah))
