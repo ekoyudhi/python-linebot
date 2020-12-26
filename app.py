@@ -64,7 +64,7 @@ db_port = os.getenv('DB_PORT')
 def saveUserLog(user_id, event):
     conn = psycopg2.connect(database = db_database, user = db_username, password = db_password, host = db_host, port = db_port)
     cur = conn.cursor()
-    sql = "INSERT INTO userLog(user_id,events) VALUES ({0},{1})".format(user_id,event)
+    sql = "INSERT INTO userLog(user_id,events) VALUES ('{0}','{1}')".format(user_id,event)
     cur.execute(sql)
     cur.commit()
     conn.close() 
