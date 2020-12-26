@@ -96,14 +96,17 @@ def callback():
                     contents=[
                         ButtonComponent(
                             style="primary",
+                            height="sm",
                             action=PostbackAction(label="Pajak Penghasilan", data="pajak=pph", displayText="pph")
                         ),
                         ButtonComponent(
                             style="primary",
+                            height="sm",
                             action=PostbackAction(label="Pajak Pertambahan Nilai", data="pajak=ppn", displayText="ppn")
                         ),
                         ButtonComponent(
                             style="primary",
+                            height="sm",
                             action=PostbackAction(label="Pajak Bumi dan Bangunan", data="pajak=pbb", displayText="pbb")
                         )
                     ]
