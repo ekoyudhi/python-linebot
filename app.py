@@ -71,11 +71,11 @@ def callback():
     # if event is MessageEvent and message is TextMessage, then echo text
     for event in events:
         if not isinstance(event, MessageEvent):
-            continue
+            #continue
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text="not instance event"))
         if not isinstance(event.message, TextMessage):
             #continue
-            if 'postback' in str(event.type):
-                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="postback"))
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text="not instance message"))
 
         text = str(event.message.text)
         if 'mulai' in text.lower():
