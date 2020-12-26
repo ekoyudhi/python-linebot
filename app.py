@@ -129,7 +129,15 @@ def BubbleHasil(kata_frasa, hasilKBBI):
     )
     return hasil_bubble
 
-
+def getNameFromProfil(user_id):
+    hasil = ""
+    try:
+        profile = line_bot_api.get_profile(user_id)
+        hasil = profile.display_name
+    except:
+        hasil = "null"
+    return hasil
+    
 mulai_bubble = BubbleContainer(
     header=BoxComponent(
             layout="vertical",
@@ -193,9 +201,11 @@ def callback():
             elif isinstance(event, UnfollowEvent):
                 removeAllUserLog(event.source.user_id)
             elif isinstance(event, JoinEvent):
-                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Join Group"))
+                nm = getNameFromProfil(event.source.user_id)
+                txt_join = "Halo, aku "+nm
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_join))
             elif isinstance(event, LeaveEvent):
-                line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Leave Group"))
+                continue
         elif not isinstance(event.message, TextMessage):
             keterangan = "Perintah tidak dikenali. Untuk memulai silahkan ketik \"Mulai\""
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=keterangan))
