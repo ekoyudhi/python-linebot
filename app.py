@@ -127,12 +127,7 @@ def callback():
                         ),
                         footer=BoxComponent(
                             layout="vertical",
-                            contents=[
-                                ButtonComponent(
-                                    style="primary",
-                                    action=PostbackAction(label="Cari Kata Lain", data="cari_kata_lain")
-                                )
-                            ]
+                            contents=[]
                         )
                     )
                     message = FlexSendMessage(alt_text="Ini Flex Message", contents=bubble)
