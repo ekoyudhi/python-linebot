@@ -71,8 +71,8 @@ def callback():
         if not isinstance(event.message, TextMessage):
             continue
 
-        #txt = event.message.text
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="Eko Yudhi Prastowo"))
+        txt = event.message.text
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt))
         # line_bot_api.reply_message(
         #     event.reply_token,
         #     TextSendMessage(text=event.message.text)
