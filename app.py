@@ -76,12 +76,13 @@ def callback():
             if isinstance(event, PostbackEvent):
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text="ini postback event"))
                 postback_data = str(event.postback.data)
-                lst_postback_data = postback_data.split()
-                if len(lst_postback_data) == 1:
-                    dat = lst_postback_data[0].split("=")[1]
-                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=dat))
-                elif len(lst_postback_data) == 2:
-                    continue
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text=postback_data))
+                # lst_postback_data = postback_data.split()
+                # if len(lst_postback_data) == 1:
+                #     dat = lst_postback_data[0].split("=")[1]
+                #     line_bot_api.reply_message(event.reply_token, TextSendMessage(text=dat))
+                # elif len(lst_postback_data) == 2:
+                #     continue
         if not isinstance(event.message, TextMessage):
             #continue
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text="not instance message"))
