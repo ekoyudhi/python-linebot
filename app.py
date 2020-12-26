@@ -67,7 +67,19 @@ def saveUserLog(user_id, event):
     sql = "INSERT INTO userLog(user_id,events) VALUES ('{0}','{1}')".format(user_id,event)
     cur.execute(sql)
     conn.commit()
-    conn.close() 
+    conn.close()
+
+def getLastEventUserLog(user_id):
+    conn = psycopg2.connect(database = db_database, user = db_username, password = db_password, host = db_host, port = db_port)
+    cur = conn.cursor()
+    sql = "SELECT events FROM userLog WHERE user_id='{0}' ORDER BY time_stamp DESC LIMIT 1".format(user_id)
+    cur.execute(sql)
+    rows = cur.fetchall()
+    conn.close()
+    if len(rows) > 0:
+        return rows[0][0]
+    else:
+        return 'null'    
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -134,8 +146,12 @@ def callback():
             message = FlexSendMessage(alt_text="Flex Mulai", contents=mulai_bubble)
             line_bot_api.reply_message(event.reply_token, message)
         else:
-            keterangan = "Perintah tidak dikenali. Untuk memulai silahkan ketik \"Mulai\""
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=keterangan))
+            last_event = getLastEventUserLog(event.source.user_id)
+            if 'start' in last_event:
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text='memulai pencarian'))
+            else:
+                keterangan = "Perintah tidak dikenali. Untuk memulai silahkan ketik \"Mulai\""
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text=keterangan))
 
     return 'OK'
 
