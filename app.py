@@ -72,15 +72,21 @@ def callback():
             continue
 
         txt = str(event.message.text)
-        if '/start' in txt:
-            txt_start = 'Ini adalah start'
+        if '/help' in txt:
+            txt_start = 'Ini Line Bot untuk pencarian kata pada Kamus Besar Bahasa Indonesia.\nUntuk memmulai pencarian ketik perintah /kbbi kata_yang_dicari'
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_start))
+        elif '/kbbi' in txt:
+            lst_txt = txt.split()
+            if len(lst_txt) == 2:
+                if '/kbbi' in lst_txt[0]:
+                    txt_kbbi_cari = "Pencarian kata "+lst_txt[1]+" ditemukan"
+                    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_kbbi_cari))
+            else:
+                txt_kbbi_salah = "Perintah yang benar adalah /kbbi kata_yang_dicari"
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_kbbi_salah))
         else:
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt))
-        # line_bot_api.reply_message(
-        #     event.reply_token,
-        #     TextSendMessage(text=event.message.text)
-        # )
+            txt_not = 'Perintah tidak dimengerti.\nSilahkan ketik perintah /help'
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=txt_not))
 
     return 'OK'
 
